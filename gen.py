@@ -1,12 +1,16 @@
-# 
-import graphviz
+import sys
+import requests
 import json
-import collections
 from graphviz import Digraph
 
-with open("./combinations.json", "r") as file:
-    rec1 = json.load(file)
-    recipes = {e["id"]: e for e in rec1} 
+sys.stdout.write("\nFetching elements, please wait... ")
+sys.stdout.flush()
+response = requests.get("https://eelements.apps.adamenglish.net/statistics/getElements.php")
+sys.stdout.write("Done\n\n")
+responseText = response.text
+
+rec1 = json.loads(responseText)
+recipes = {e["id"]: e for e in rec1} 
 
 def getElementTree(id):
     if len(recipes[id]["parents"]) != 2: return id
@@ -27,16 +31,11 @@ def visualizeTree(tree: dict, saved:set = set()): #i have no idea what i'm doing
 
     visualizeTree(tree[id][0])
     visualizeTree(tree[id][1])
-    
-    
-    
 
 
-element_id = int(input("element id? "))
+element_id = int(input("Element ID: "))
 element_tree = getElementTree(element_id)
-print(element_tree)
 
 visualizeTree(element_tree)
-name = input("name of output? ")
-name = name if name else str(element_id)
-dot.render("./output/" + name, format='png', view=True)
+name = str(element_id)
+dot.render("./" + name, format='png', view=True)
