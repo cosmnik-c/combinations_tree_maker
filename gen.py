@@ -30,11 +30,8 @@ def visualizeTree(tree: dict, saved:set = set()):
     #we need to go deeper
     visualizeTree(tree[id][0])
     visualizeTree(tree[id][1])
-    
-    
-    
 
-55
+
 element_id = int(input("element id? "))
 element_tree = getElementTree(element_id)
 print(element_tree)
